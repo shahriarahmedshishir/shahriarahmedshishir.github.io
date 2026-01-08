@@ -1,10 +1,9 @@
 {
-  "version": 2,
-  "builds": [
+  "trailingSlash": false,
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "docs" }
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
