@@ -386,22 +386,26 @@ const App = () => {
             </div>
             <div className="flex justify-center gap-6 mt-8">
               <a
-                href="#"
-                className="hover:text-purple-400 transform hover:scale-110 transition-all"
+                href="https://github.com/shahriarahmedshishir"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-purple-400"
               >
-                <Github size={28} />
+                <Github size={20} />
               </a>
               <a
-                href="#"
-                className="hover:text-purple-400 transform hover:scale-110 transition-all"
+                href="https://www.linkedin.com/in/shahriarshishir/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-400"
               >
-                <Linkedin size={28} />
+                <Linkedin size={20} />
               </a>
               <a
-                href="#"
-                className="hover:text-purple-400 transform hover:scale-110 transition-all"
+                href="mailto:shesirsikder1234@gmail.com"
+                className="hover:text-pink-400"
               >
-                <Mail size={28} />
+                <Mail size={20} />
               </a>
             </div>
           </div>
@@ -892,7 +896,7 @@ const App = () => {
         </p>
         <div className="flex justify-center gap-6 mt-4">
           <a
-            href="https://github.com"
+            href="https://github.com/shahriarahmedshishir"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-purple-400"
@@ -900,14 +904,17 @@ const App = () => {
             <Github size={20} />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/shahriarshishir/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-400"
           >
             <Linkedin size={20} />
           </a>
-          <a href="mailto:dev@example.com" className="hover:text-pink-400">
+          <a
+            href="mailto:shesirsikder1234@gmail.com"
+            className="hover:text-pink-400"
+          >
             <Mail size={20} />
           </a>
         </div>
