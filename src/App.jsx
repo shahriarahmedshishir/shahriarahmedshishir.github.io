@@ -123,7 +123,16 @@ const App = () => {
           api.get("/application/experiences"),
         ]);
 
-        setBlogs(blogsRes.data);
+        // Sort blogs by createdAt (newest first) or by _id if createdAt doesn't exist
+        const sortedBlogs = blogsRes.data.sort((a, b) => {
+          if (a.createdAt && b.createdAt) {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          }
+          // MongoDB ObjectIDs contain timestamp - use them if createdAt doesn't exist
+          return b._id.localeCompare(a._id);
+        });
+
+        setBlogs(sortedBlogs);
         setProjects(projectsRes.data);
         setExperiences(experiencesRes.data);
       } catch (error) {
@@ -718,7 +727,7 @@ const App = () => {
         id="skills"
         className="min-h-screen flex items-center justify-center px-4 py-32"
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div>
             {/* Section Header */}
             <motion.div
@@ -1025,13 +1034,13 @@ const App = () => {
       {/* Projects Section with Slider */}
       <section
         id="projects"
-        className="min-h-screen flex items-center justify-center px-4 py-32"
+        className="h-screen flex items-center justify-center px-4 py-20"
       >
-        <div className="max-w-7xl mx-auto">
-          <div>
+        <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
+          <div className="flex-1 flex flex-col overflow-hidden">
             {/* Section Header */}
             <motion.div
-              className="relative z-10 text-center mb-16"
+              className="relative z-10 text-center mb-8 flex-shrink-0"
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -1061,174 +1070,178 @@ const App = () => {
             </motion.div>
 
             {/* Slider Container */}
-            {projects.length > 0 ? (
-              <div className="relative">
-                <div className="overflow-hidden rounded-3xl">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentSlide}
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -100 }}
-                      transition={{ duration: 0.5 }}
-                      className="relative bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+            <div className="flex-1 flex items-center px-12">
+              {projects.length > 0 ? (
+                <div className="relative w-full">
+                  <div className="overflow-hidden rounded-2xl">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentSlide}
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.5 }}
+                        className="relative bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
 
-                      <div className="relative p-8 md:p-12">
-                        <div className="flex flex-col lg:flex-row gap-8 items-center">
-                          {/* Project Info */}
-                          <div className="flex-1 space-y-6">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                              <Star
-                                size={16}
-                                className="text-yellow-400 fill-yellow-400"
-                              />
-                              <span className="text-sm">Featured Project</span>
-                            </div>
-
-                            <h3 className="text-3xl md:text-4xl font-bold text-white">
-                              {projects[currentSlide].title}
-                            </h3>
-
-                            <p className="text-gray-300 leading-relaxed text-lg">
-                              {projects[currentSlide].description}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2">
-                              {projects[currentSlide].technologies.map(
-                                (tech) => (
-                                  <span
-                                    key={tech}
-                                    className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors"
-                                  >
-                                    {tech}
-                                  </span>
-                                )
-                              )}
-                            </div>
-
-                            <div className="flex flex-wrap gap-4 pt-4">
-                              <motion.a
-                                href={projects[currentSlide].githubUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                              >
-                                <Github
-                                  size={20}
-                                  className="group-hover:text-purple-400 transition-colors"
+                        <div className="relative p-6 md:p-8">
+                          <div className="flex flex-col lg:flex-row gap-6 items-center">
+                            {/* Project Info */}
+                            <div className="flex-1 space-y-3">
+                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                                <Star
+                                  size={14}
+                                  className="text-yellow-400 fill-yellow-400"
                                 />
-                                <span>View Code</span>
-                              </motion.a>
-                              <motion.a
-                                href={projects[currentSlide].liveUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg hover:shadow-blue-500/50 transition-all"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                              >
-                                <span>Live Demo</span>
-                                <ExternalLink
-                                  size={20}
-                                  className="group-hover:translate-x-1 transition-transform"
-                                />
-                              </motion.a>
-                            </div>
-                          </div>
+                                <span className="text-xs">
+                                  Featured Project
+                                </span>
+                              </div>
 
-                          {/* Project Visual */}
-                          <div className="flex-1 flex justify-center lg:justify-end">
-                            <motion.div
-                              className="relative w-full max-w-md aspect-video rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center overflow-hidden group"
-                              whileHover={{ scale: 1.02 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all duration-500" />
-                              <Code
-                                size={80}
-                                className="text-white/20 group-hover:text-white/30 transition-colors"
-                              />
-                            </motion.div>
+                              <h3 className="text-xl md:text-2xl font-bold text-white">
+                                {projects[currentSlide].title}
+                              </h3>
+
+                              <p className="text-gray-300 leading-relaxed text-sm">
+                                {projects[currentSlide].description}
+                              </p>
+
+                              <div className="flex flex-wrap gap-2">
+                                {projects[currentSlide].technologies.map(
+                                  (tech) => (
+                                    <span
+                                      key={tech}
+                                      className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-xs font-medium hover:bg-white/10 transition-colors"
+                                    >
+                                      {tech}
+                                    </span>
+                                  )
+                                )}
+                              </div>
+
+                              <div className="flex flex-wrap gap-3">
+                                <motion.a
+                                  href={projects[currentSlide].githubUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="group flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <Github
+                                    size={16}
+                                    className="group-hover:text-purple-400 transition-colors"
+                                  />
+                                  <span>View Code</span>
+                                </motion.a>
+                                <motion.a
+                                  href={projects[currentSlide].liveUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg hover:shadow-blue-500/50 transition-all text-sm"
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                >
+                                  <span>Live Demo</span>
+                                  <ExternalLink
+                                    size={16}
+                                    className="group-hover:translate-x-1 transition-transform"
+                                  />
+                                </motion.a>
+                              </div>
+                            </div>
+
+                            {/* Project Visual */}
+                            <div className="flex-1 flex justify-center lg:justify-end">
+                              <motion.div
+                                className="relative w-full max-w-xs aspect-video rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center overflow-hidden group"
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all duration-500" />
+                                <Code
+                                  size={60}
+                                  className="text-white/20 group-hover:text-white/30 transition-colors"
+                                />
+                              </motion.div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* Navigation Buttons */}
-                {projects.length > 1 && (
-                  <>
-                    <motion.button
-                      onClick={prevSlide}
-                      className="absolute top-1/2 -left-6 transform -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <ChevronLeft size={24} />
-                    </motion.button>
-                    <motion.button
-                      onClick={nextSlide}
-                      className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <ChevronRight size={24} />
-                    </motion.button>
-                  </>
-                )}
-
-                {/* Dots Indicator */}
-                {projects.length > 1 && (
-                  <div className="flex justify-center mt-8 gap-2">
-                    {projects.map((_, index) => (
-                      <motion.button
-                        key={index}
-                        onClick={() => goToSlide(index)}
-                        className={`h-2 rounded-full transition-all ${
-                          currentSlide === index
-                            ? "w-8 bg-gradient-to-r from-blue-500 to-purple-600"
-                            : "w-2 bg-white/20 hover:bg-white/40"
-                        }`}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
-                      />
-                    ))}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
-                )}
-              </div>
-            ) : (
-              <motion.div
-                className="text-center py-16"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-              >
-                <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
-                  <FolderGit2 size={40} className="text-blue-400" />
+
+                  {/* Navigation Buttons */}
+                  {projects.length > 1 && (
+                    <>
+                      <motion.button
+                        onClick={prevSlide}
+                        className="absolute top-1/2 -left-6 transform -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center z-10"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <ChevronLeft size={24} />
+                      </motion.button>
+                      <motion.button
+                        onClick={nextSlide}
+                        className="absolute top-1/2 -right-6 transform -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center z-10"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <ChevronRight size={24} />
+                      </motion.button>
+                    </>
+                  )}
+
+                  {/* Dots Indicator */}
+                  {projects.length > 1 && (
+                    <div className="flex justify-center mt-4 gap-2">
+                      {projects.map((_, index) => (
+                        <motion.button
+                          key={index}
+                          onClick={() => goToSlide(index)}
+                          className={`h-2 rounded-full transition-all ${
+                            currentSlide === index
+                              ? "w-8 bg-gradient-to-r from-blue-500 to-purple-600"
+                              : "w-2 bg-white/20 hover:bg-white/40"
+                          }`}
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <p className="text-gray-400 text-lg">
-                  Projects will be displayed here
-                </p>
-              </motion.div>
-            )}
+              ) : (
+                <motion.div
+                  className="text-center py-16"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
+                    <FolderGit2 size={40} className="text-blue-400" />
+                  </div>
+                  <p className="text-gray-400 text-lg">
+                    Projects will be displayed here
+                  </p>
+                </motion.div>
+              )}
+            </div>
           </div>
         </div>
       </section>
       {/* Blogs Section */}
       <section
         id="blogs"
-        className="min-h-screen flex items-center justify-center px-4 py-32"
+        className="h-screen flex items-center justify-center px-4 py-20"
       >
-        <div className="max-w-6xl mx-auto">
-          <div>
+        <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
+          <div className="flex-1 flex flex-col overflow-hidden">
             {/* Section Header */}
             <motion.div
-              className="relative z-10 text-center mb-16"
+              className="relative z-10 text-center mb-8 flex-shrink-0"
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -1257,46 +1270,48 @@ const App = () => {
               </motion.h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogs.map((blog, index) => (
-                <motion.div
-                  key={blog._id}
-                  onClick={() => setSelectedBlog(blog)}
-                  className="group cursor-pointer relative bg-[#0f0f1a]/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 transition-all duration-500 overflow-hidden"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all duration-500" />
+            <div className="max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {blogs.map((blog, index) => (
+                  <motion.div
+                    key={blog._id}
+                    onClick={() => setSelectedBlog(blog)}
+                    className="group cursor-pointer relative bg-[#0f0f1a]/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 transition-all duration-500 overflow-hidden"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -5 }}
+                  >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all duration-500" />
 
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wide">
-                        {blog.category}
-                      </span>
-                      <ArrowRight
-                        size={20}
-                        className="text-gray-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
-                      />
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wide">
+                          {blog.category}
+                        </span>
+                        <ArrowRight
+                          size={20}
+                          className="text-gray-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all"
+                        />
+                      </div>
+
+                      <h3 className="text-xl font-bold mb-3 text-white line-clamp-2 group-hover:text-blue-400 transition-colors">
+                        {blog.title}
+                      </h3>
+
+                      <p className="text-gray-400 text-sm line-clamp-3 mb-4">
+                        {blog.content}
+                      </p>
+
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <User size={16} />
+                        <span>{blog.author}</span>
+                      </div>
                     </div>
-
-                    <h3 className="text-xl font-bold mb-3 text-white line-clamp-2 group-hover:text-blue-400 transition-colors">
-                      {blog.title}
-                    </h3>
-
-                    <p className="text-gray-400 text-sm line-clamp-3 mb-4">
-                      {blog.content}
-                    </p>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <User size={16} />
-                      <span>{blog.author}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             {blogs.length === 0 && (
