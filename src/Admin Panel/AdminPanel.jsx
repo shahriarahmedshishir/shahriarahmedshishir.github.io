@@ -11,6 +11,28 @@ const iconOptions = {
   Linkedin,
 };
 
+// Function to generate random gradient colors
+const generateRandomGradient = () => {
+  const gradients = [
+    "from-blue-500 to-purple-600",
+    "from-purple-500 to-pink-600",
+    "from-pink-500 to-orange-600",
+    "from-teal-500 to-blue-500",
+    "from-green-500 to-emerald-600",
+    "from-cyan-500 to-blue-600",
+    "from-indigo-500 to-purple-600",
+    "from-violet-500 to-fuchsia-600",
+    "from-rose-500 to-pink-600",
+    "from-amber-500 to-orange-600",
+    "from-lime-500 to-green-600",
+    "from-sky-500 to-indigo-600",
+    "from-fuchsia-500 to-purple-600",
+    "from-emerald-500 to-teal-600",
+    "from-orange-500 to-red-600",
+  ];
+  return gradients[Math.floor(Math.random() * gradients.length)];
+};
+
 const AdminPanel = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -41,7 +63,6 @@ const AdminPanel = () => {
     }
   };
 
-  // --- Form States ---
   const [projectForm, setProjectForm] = useState({
     title: "",
     description: "",
@@ -49,7 +70,7 @@ const AdminPanel = () => {
     githubUrl: "",
     liveUrl: "",
     featured: false,
-    color: "from-teal-500 to-blue-500",
+    color: generateRandomGradient(),
   });
 
   const [experienceForm, setExperienceForm] = useState({
@@ -102,7 +123,7 @@ const AdminPanel = () => {
         githubUrl: "",
         liveUrl: "",
         featured: false,
-        color: "from-teal-500 to-blue-500",
+        color: generateRandomGradient(),
       });
     } catch (err) {
       console.error(err);
@@ -142,22 +163,24 @@ const AdminPanel = () => {
 
   // --- JSX ---
   return (
-    <div className="min-h-screen bg-slate-900 ">
+    <div className="min-h-screen bg-[#0a0a0f] pb-20">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-purple-500/20 text-amber-50">
+      <nav className="fixed top-0 w-full bg-[#0a0a0f]/80 backdrop-blur-xl z-50 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-              {"<Admin Panel/>"}
+          <div className="flex justify-between items-center h-20">
+            <div className="text-2xl font-bold">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {"<Admin Panel />"}
+              </span>
             </div>
 
             {/* Desktop menu */}
-            <div className="hidden md:flex space-x-8">
-              {["Projects", "Blogs", "Experiences"].map((item) => (
+            <div className="hidden md:flex space-x-1">
+              {["Projects", "Blogs", "Experiences", "Messages"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="hover:text-purple-400 transition-colors duration-300"
+                  className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/5"
                 >
                   {item}
                 </a>
@@ -166,7 +189,7 @@ const AdminPanel = () => {
 
             {/* Mobile menu */}
             <button
-              className="md:hidden"
+              className="md:hidden text-gray-400 hover:text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X size={24} /> : <FolderGit2 size={24} />}
@@ -175,13 +198,13 @@ const AdminPanel = () => {
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden bg-slate-800/95 backdrop-blur-md">
+          <div className="md:hidden bg-[#0f0f1a]/95 backdrop-blur-xl border-t border-white/5">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {["Projects", "Blogs", "Experiences"].map((item) => (
+              {["Projects", "Blogs", "Experiences", "Messages"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="block px-3 py-2 hover:bg-purple-500/20 rounded-md transition-colors"
+                  className="block px-3 py-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item}
@@ -193,13 +216,15 @@ const AdminPanel = () => {
       </nav>
 
       {/* Projects Section */}
-      <section id="projects" className="pt-24 px-4 max-w-4xl mx-auto mb-16">
-        <h2 className="text-3xl font-bold mb-6 text-amber-50 text-center">
-          Add Project
+      <section id="projects" className="pt-28 px-4 max-w-4xl mx-auto mb-16">
+        <h2 className="text-4xl font-bold mb-8 text-center">
+          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Add Project
+          </span>
         </h2>
         <form
           onSubmit={submitProject}
-          className="space-y-4 bg-white p-6 rounded shadow"
+          className="space-y-4 bg-[#0f0f1a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl"
         >
           <input
             type="text"
@@ -207,7 +232,7 @@ const AdminPanel = () => {
             placeholder="Project Title"
             value={projectForm.title}
             onChange={handleProjectChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
             required
           />
           <textarea
@@ -215,7 +240,7 @@ const AdminPanel = () => {
             placeholder="Project Description"
             value={projectForm.description}
             onChange={handleProjectChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors h-32 resize-none"
             required
           />
           <input
@@ -224,7 +249,7 @@ const AdminPanel = () => {
             placeholder="Technologies (comma separated)"
             value={projectForm.technologies}
             onChange={handleProjectChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
             required
           />
           <input
@@ -233,7 +258,7 @@ const AdminPanel = () => {
             placeholder="GitHub URL"
             value={projectForm.githubUrl}
             onChange={handleProjectChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
           />
           <input
             type="text"
@@ -241,20 +266,21 @@ const AdminPanel = () => {
             placeholder="Live URL"
             value={projectForm.liveUrl}
             onChange={handleProjectChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
           />
-          <label className="flex items-center space-x-2">
+          <label className="flex items-center space-x-2 text-gray-300">
             <input
               type="checkbox"
               name="featured"
               checked={projectForm.featured}
               onChange={handleProjectChange}
+              className="w-4 h-4 rounded border-white/10 bg-white/5 text-blue-500 focus:ring-blue-500/50"
             />
-            <span>Featured</span>
+            <span>Featured Project</span>
           </label>
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
           >
             Add Project
           </button>
@@ -262,13 +288,15 @@ const AdminPanel = () => {
       </section>
 
       {/* Blogs Section */}
-      <section id="blogs" className="pt-24 px-4 max-w-4xl mx-auto mb-16">
-        <h2 className="text-3xl font-bold mb-6 text-amber-50 text-center">
-          Add Blog
+      <section id="blogs" className="pt-28 px-4 max-w-4xl mx-auto mb-16">
+        <h2 className="text-4xl font-bold mb-8 text-center">
+          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Add Blog
+          </span>
         </h2>
         <form
           onSubmit={submitBlog}
-          className="space-y-4 bg-white p-6 rounded shadow"
+          className="space-y-4 bg-[#0f0f1a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl"
         >
           <input
             type="text"
@@ -276,7 +304,7 @@ const AdminPanel = () => {
             placeholder="Blog Title"
             value={blogForm.title}
             onChange={handleBlogChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors"
             required
           />
           <textarea
@@ -284,7 +312,7 @@ const AdminPanel = () => {
             placeholder="Blog Content"
             value={blogForm.content}
             onChange={handleBlogChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors h-48 resize-none"
             required
           />
           <input
@@ -293,7 +321,7 @@ const AdminPanel = () => {
             placeholder="Author Name"
             value={blogForm.author}
             onChange={handleBlogChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors"
           />
           <input
             type="text"
@@ -301,11 +329,11 @@ const AdminPanel = () => {
             placeholder="Category"
             value={blogForm.category}
             onChange={handleBlogChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-purple-500/50 focus:outline-none transition-colors"
           />
           <button
             type="submit"
-            className="bg-purple-500 text-white px-4 py-2 rounded"
+            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
           >
             Add Blog
           </button>
@@ -313,13 +341,15 @@ const AdminPanel = () => {
       </section>
 
       {/* Experiences Section */}
-      <section id="experiences" className="pt-24 px-4 max-w-4xl mx-auto mb-16">
-        <h2 className="text-3xl font-bold mb-6 text-amber-50 text-center">
-          Add Experience
+      <section id="experiences" className="pt-28 px-4 max-w-4xl mx-auto mb-16">
+        <h2 className="text-4xl font-bold mb-8 text-center">
+          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Add Experience
+          </span>
         </h2>
         <form
           onSubmit={submitExperience}
-          className="space-y-4 bg-white p-6 rounded shadow"
+          className="space-y-4 bg-[#0f0f1a]/90 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl"
         >
           <input
             type="text"
@@ -327,7 +357,7 @@ const AdminPanel = () => {
             placeholder="Job Title"
             value={experienceForm.title}
             onChange={handleExperienceChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
             required
           />
           <input
@@ -336,83 +366,90 @@ const AdminPanel = () => {
             placeholder="Company"
             value={experienceForm.company}
             onChange={handleExperienceChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
             required
           />
           <input
             type="text"
             name="period"
-            placeholder="Period"
+            placeholder="Period (e.g., 2023 - Present)"
             value={experienceForm.period}
             onChange={handleExperienceChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors"
             required
           />
           <textarea
             name="description"
-            placeholder="Description"
+            placeholder="Job Description"
             value={experienceForm.description}
             onChange={handleExperienceChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white placeholder-gray-500 focus:border-blue-500/50 focus:outline-none transition-colors h-32 resize-none"
             required
           />
           <select
             name="icon"
             value={experienceForm.icon}
             onChange={handleExperienceChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white/5 border border-white/10 px-4 py-3 rounded-lg text-white focus:border-blue-500/50 focus:outline-none transition-colors"
           >
             {Object.keys(iconOptions).map((icon) => (
-              <option key={icon} value={icon}>
+              <option
+                key={icon}
+                value={icon}
+                className="bg-[#0f0f1a] text-white"
+              >
                 {icon}
               </option>
             ))}
           </select>
           <button
             type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
           >
             Add Experience
           </button>
         </form>
       </section>
-      <section
-        id="messages"
-        className="h-screen overflow-y-auto bg-slate-900/90 p-8"
-      >
-        <h2 className="text-4xl md:text-6xl font-bold mb-12 text-center text-amber-50">
-          Received{" "}
-          <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-            Messages
+      <section id="messages" className="pt-28 px-4 max-w-7xl mx-auto mb-16">
+        <h2 className="text-4xl font-bold mb-12 text-center">
+          <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Received Messages
           </span>
         </h2>
 
         {loading ? (
-          <p className="text-center text-gray-300">Loading messages...</p>
+          <div className="bg-[#0f0f1a]/90 backdrop-blur-xl rounded-2xl p-12 border border-white/10 text-center">
+            <p className="text-gray-400 text-lg">Loading messages...</p>
+          </div>
         ) : messages.length === 0 ? (
-          <p className="text-center text-gray-300">No messages yet.</p>
+          <div className="bg-[#0f0f1a]/90 backdrop-blur-xl rounded-2xl p-12 border border-white/10 text-center">
+            <Mail className="w-16 h-16 mx-auto mb-4 text-gray-500" />
+            <p className="text-gray-400 text-lg mb-2">No messages yet</p>
+            <p className="text-gray-500 text-sm">
+              Messages from your portfolio contact form will appear here
+            </p>
+          </div>
         ) : (
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {messages.map((msg) => (
               <div
                 key={msg._id}
-                className="bg-slate-800/50 rounded-2xl p-6 border border-purple-500/20 hover:shadow-lg hover:shadow-purple-500/30 transition-all cursor-pointer relative"
+                className="bg-[#0f0f1a] backdrop-blur-xl rounded-2xl p-6 border border-white/20 hover:border-blue-500/50 transition-all cursor-pointer relative group hover:shadow-lg hover:shadow-blue-500/10"
               >
-                <h3
-                  className="text-lg font-semibold text-amber-50 mb-2 truncate"
-                  onClick={() => setSelectedMessage(msg)}
-                >
-                  {msg.name}
-                </h3>
-                <p
-                  className="text-gray-300 text-sm truncate"
-                  onClick={() => setSelectedMessage(msg)}
-                >
-                  {msg.message}
-                </p>
+                <div onClick={() => setSelectedMessage(msg)}>
+                  <h3 className="text-lg font-semibold text-white mb-2 truncate">
+                    {msg.name}
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-3 truncate">
+                    {msg.email}
+                  </p>
+                  <p className="text-gray-300 text-sm line-clamp-2">
+                    {msg.message}
+                  </p>
+                </div>
                 <button
                   onClick={() => handleDelete(msg._id)}
-                  className="absolute top-3 right-3 text-red-500 hover:text-red-400"
+                  className="absolute top-4 right-4 text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <X size={20} />
                 </button>
@@ -423,25 +460,10 @@ const AdminPanel = () => {
 
         {/* Modal */}
         {selectedMessage && (
-          <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-            <div className="bg-slate-900 max-w-2xl w-full rounded-2xl p-6 relative border border-purple-500/30">
-              <button
-                onClick={() => setSelectedMessage(null)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"
-              >
-                ✕
-              </button>
-              <h3 className="text-2xl font-bold text-amber-50 mb-2">
-                {selectedMessage.name}
-              </h3>
-              <p className="text-gray-300 text-sm mb-4">
-                {selectedMessage.email}
-              </p>
-              <p className="text-gray-200 whitespace-pre-wrap">
-                {selectedMessage.message}
-              </p>
-            </div>
-          </div>
+          <MessageModal
+            message={selectedMessage}
+            onClose={() => setSelectedMessage(null)}
+          />
         )}
       </section>
     </div>
