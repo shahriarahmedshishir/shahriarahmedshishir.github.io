@@ -727,7 +727,7 @@ const App = () => {
         id="skills"
         className="min-h-screen flex items-center justify-center px-4 py-32"
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[90rem] mx-auto">
           <div>
             {/* Section Header */}
             <motion.div
@@ -1034,10 +1034,10 @@ const App = () => {
       {/* Projects Section with Slider */}
       <section
         id="projects"
-        className="h-screen flex items-center justify-center px-4 py-20"
+        className="min-h-screen flex items-center justify-center px-4 py-20"
       >
-        <div className="max-w-7xl mx-auto w-full h-full flex flex-col">
-          <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full flex flex-col">
+          <div className="flex-1 flex flex-col">
             {/* Section Header */}
             <motion.div
               className="relative z-10 text-center mb-8 flex-shrink-0"
@@ -1235,10 +1235,10 @@ const App = () => {
       {/* Blogs Section */}
       <section
         id="blogs"
-        className="h-screen flex items-center justify-center px-4 py-20"
+        className="min-h-screen flex items-center justify-center px-4 py-20"
       >
-        <div className="max-w-6xl mx-auto w-full h-full flex flex-col">
-          <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="max-w-6xl mx-auto w-full flex flex-col">
+          <div className="flex-1 flex flex-col">
             {/* Section Header */}
             <motion.div
               className="relative z-10 text-center mb-8 flex-shrink-0"
@@ -1270,7 +1270,7 @@ const App = () => {
               </motion.h2>
             </motion.div>
 
-            <div className="max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+            <div className="overflow-y-auto custom-scrollbar pr-2">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {blogs.map((blog, index) => (
                   <motion.div
